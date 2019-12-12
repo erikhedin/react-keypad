@@ -59,7 +59,7 @@ class App extends React.Component {
       lastkey: lastkey,
       counter: counter
     });
-    if (queue) window.timer = setTimeout(this.queueKey, 300);
+    if (queue) window.timer = setTimeout(this.queueKey, 500);
   }
   queueKey() {
     this.setState({
