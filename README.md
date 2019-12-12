@@ -1,6 +1,8 @@
 # Phone Keypad Password Entry
 
-The requirements stipulated a ~300ms delay.  I found that delay was a little short so I increased it to 500ms for a little breathing room.  This was a fun little project to put together.
+Test project in React to allow keypad entries for password field.  After testing I settled on a 500ms key delay.  
+
+![Image of project ui](https://raw.githubusercontent.com/erikhedin/react-keypad/master/public/phone-keypad.png)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
