@@ -9,20 +9,6 @@ class App extends React.Component {
       lastkey: "",
       counter: 0
     };
-    // this.keypad = {
-    //   a: "1",
-    //   b: "2ABC",
-    //   c: "3DEF",
-    //   d: "4GHI",
-    //   e: "5JKL",
-    //   f: "6MNO",
-    //   g: "7PQRS",
-    //   h: "8TUV",
-    //   i: "9WXYZ",
-    //   j: "",
-    //   k: "0",
-    //   l: "X"
-    // };
     this.keypad = [
        "1",
        "2ABC",
