@@ -10,24 +10,25 @@ class App extends React.Component {
       counter: 0
     };
     this.keypad = {
-      a: { num: "1", keys: "" },
-      b: { num: "2", keys: "ABC" },
-      c: { num: "3", keys: "DEF" },
-      d: { num: "4", keys: "GHI" },
-      e: { num: "5", keys: "JKL" },
-      f: { num: "6", keys: "MNO" },
-      g: { num: "7", keys: "PQRS" },
-      h: { num: "8", keys: "TUV" },
-      i: { num: "9", keys: "WXYZ" },
-      j: { num: "", keys: "" },
-      k: { num: "0", keys: "" },
-      l: { num: "X", keys: "" }
+      a: "1",
+      b: "2ABC",
+      c: "3DEF",
+      d: "4GHI",
+      e: "5JKL",
+      f: "6MNO",
+      g: "7PQRS",
+      h: "8TUV",
+      i: "9WXYZ",
+      j: "",
+      k: "0",
+      l: "X"
     };
     this.updatePassword = this.updatePassword.bind(this);
     this.queueKey = this.queueKey.bind(this);
   }
   updatePassword(e) {
     let numberPressed = e.target.name;
+    let keys = e.target.value.split("");
     let password = this.state.password;
     let lastkey = this.state.lastkey;
     let counter = this.state.counter;
@@ -39,22 +40,21 @@ class App extends React.Component {
       password = password.slice(0, -1);
       lastkey = "";
       counter = 0;
-    } else {
-      let keys = numberPressed + e.target.value;
-      keys = keys.split("");
-      if (keys.length > 1 && keys.length >= counter + 1) {
-        lastkey = keys[counter];
-        counter++;
-        queue = true;
-      } else {
-        password += numberPressed;
-        lastkey = "";
-        counter = 0;
-      }
+    } 
+    else if(keys.length > 1 && keys.indexOf(lastkey) > -1) {
+      if(keys.length <= counter) counter = 0;
+      lastkey = keys[counter];
+      password = password.slice(0, -1);
+      password += keys[counter];
+      counter++;
+      queue = true
     }
-
+    else {
+      password += numberPressed;
+      lastkey = numberPressed;
+      counter = 0;
+    }
     this.setState({
-      type: this.state.type,
       password: password,
       lastkey: lastkey,
       counter: counter
@@ -63,21 +63,25 @@ class App extends React.Component {
   }
   queueKey() {
     this.setState({
-      password: this.state.password + this.state.lastkey,
+      password: this.state.password,
       lastkey: "",
       counter: 0
     });
   }
   render() {
     const keypad = this.keypad;
+    let password = this.state.password.slice(0, -1).replace(/./g, '*');
+    password += this.state.password.slice(-1);
+
     return (
       <div className="container">
         <h1>Phone Keypad Password Entry</h1>
         <form>
           <label>Password</label>
           <input
+            type="password"
             name="password"
-            value={this.state.password}
+            value={password}
             onChange={this.updatePassword}
           ></input>
         </form>
@@ -85,13 +89,13 @@ class App extends React.Component {
           {Object.keys(keypad).map((key, i) => (
             <button
               key={i}
-              name={keypad[key].num}
-              value={keypad[key].keys}
+              name={keypad[key][0]}
+              value={keypad[key]}
               onClick={this.updatePassword}
             >
-              {keypad[key].num}
+              {keypad[key][0]}
               <br />
-              {keypad[key].keys}
+              {keypad[key].slice(1)}
             </button>
           ))}
         </div>
