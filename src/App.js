@@ -9,40 +9,37 @@ class App extends React.Component {
       lastkey: "",
       counter: 0
     };
-    this.keypad = [
-       "1",
-       "2ABC",
-       "3DEF",
-       "4GHI",
-       "5JKL",
-       "6MNO",
-       "7PQRS",
-       "8TUV",
-       "9WXYZ",
-       "",
-       "0",
-       "X"
-    ];
     this.updatePassword = this.updatePassword.bind(this);
     this.queueKey = this.queueKey.bind(this);
+    this.submit = this.submit.bind(this);
     let timer = null;
     this.timer = timer;
   }
-  
+  submit(){
+    alert(this.state.password);
+  }
   updatePassword(e) {
-    let numberPressed = e.target.name;
-    let keys = e.target.value.split("");
+    if(this.timer){
+      clearTimeout(this.timer);
+      this.timer = null;
+    } 
+    const newState = this.computeNewState(e);
+    this.setState(newState);
+    if (newState.laskey !== "") this.timer = setTimeout(this.queueKey, 750);
+  }
+  computeNewState(e){
+    let counter = this.state.counter;
     let password = this.state.password;
     let lastkey = this.state.lastkey;
-    let counter = this.state.counter;
-    let queue = false;
-
-    if(this.timer) clearTimeout(this.timer);
-    if (numberPressed === "password") return false;
-    else if (numberPressed === "X") {
+    let keys = e.target.value.split("");
+    
+    if (e.target.name === "password"){
+      password += e.target.value.slice(-1);
+      return { password: password, lastkey:"", counter: 0 }
+    }
+    else if (e.target.name === "X") {
       password = password.slice(0, -1);
-      lastkey = "";
-      counter = 0;
+      return { password: password, lastkey:"", counter: 0 }
     } 
     else if(keys.length > 1 && keys.indexOf(lastkey) > -1) {
       if(keys.length <= counter) counter = 0;
@@ -50,24 +47,15 @@ class App extends React.Component {
       password = password.slice(0, -1);
       password += keys[counter];
       counter++;
-      queue = true;
+      return { password: password, lastkey: keys[counter], counter: counter++ }
     }
     else {
-      password += numberPressed;
-      lastkey = numberPressed;
-      counter = 0;
-      queue = true;
+      password += e.target.name;
+      return { password: password, lastkey: e.target.name, counter: 0 }
     }
-    this.setState({
-      password: password,
-      lastkey: lastkey,
-      counter: counter
-    });
-    if (queue) this.timer = setTimeout(this.queueKey, 750);
   }
   queueKey() {
     this.setState({
-      password: this.state.password,
       lastkey: "",
       counter: 0
     });
@@ -86,9 +74,13 @@ class App extends React.Component {
             value={password}
             onChange={this.updatePassword}
           ></input>
+          <button 
+            name="Submit"
+            onClick={this.submit}
+            >Submit</button>
         </form>
         <div className="keypad">
-          {this.keypad.map((key, i) => (
+          {this.props.keypad.map((key, i) => (
             <button
               key={i}
               name={key[0]}
