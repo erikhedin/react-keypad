@@ -13,6 +13,10 @@ input {
   padding: 10px;
   border: 1px solid;
 }
+.submit {
+  padding: 8px 12px;
+  margin-left: 20px;
+}
 .keypad {
   border: 1px solid;
   display: grid;

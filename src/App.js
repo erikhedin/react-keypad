@@ -77,6 +77,7 @@ class App extends React.Component {
           <button 
             name="Submit"
             onClick={this.submit}
+            className="submit"
             >Submit</button>
         </form>
         <div className="keypad">
